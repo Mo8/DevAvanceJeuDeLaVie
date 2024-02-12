@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jeu_de_la_vie/models/Config.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
-const int size = 100;
+const int size = 20;
 
 class JeuDeLaViePage extends StatefulWidget {
   final Config config;
@@ -95,9 +95,7 @@ class _JeuDeLaViePageState extends State<JeuDeLaViePage> {
           ],
         ),
         body: Center(
-          child: Zoom(maxScale: 1,initScale: 0.1,
-            maxZoomHeight: 100000,
-            maxZoomWidth: 100000,
+          child: Zoom(
             child: SizedBox(
               width: (size * size).toDouble(),
               height: (size * size).toDouble(),
