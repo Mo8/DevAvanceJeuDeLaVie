@@ -10,4 +10,8 @@ affichage pour 10000 générations de la simulation du jeu de la vie + bouton d'
 
 proposition technique : base de donnée mongodb + client flutter
 
-V2 :
+V1.1 :
+
+chat via socket pour deux utilisateurs
+
+1 jour de travail
