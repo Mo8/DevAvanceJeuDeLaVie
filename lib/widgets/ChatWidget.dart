@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:jeu_de_la_vie/constants.dart';
+import 'package:jeu_de_la_vie/constants.dart';
 import 'package:jeu_de_la_vie/controllers/PeerController.dart';
+import 'package:jeu_de_la_vie/models/Config.dart';
+import 'package:jeu_de_la_vie/pages/JeuDeLaViePage.dart';
 import 'package:provider/provider.dart';
 
 class ChatWidget extends StatelessWidget {
@@ -60,17 +64,45 @@ class ChatWidget extends StatelessWidget {
                                         .history
                                         .values
                                         .map(
-                                          (e) => e.sender == context.read<PeerController>().id
+                                          (m) => m.sender == context.read<PeerController>().id
                                               ? Container(
                                                   padding: const EdgeInsets.only(left: 20, bottom: 5, top: 5),
                                                   alignment: Alignment.centerRight,
-                                                  child: Chip(
-                                                    label: Text(
-                                                      e.message,
-                                                      softWrap: true,
-                                                      maxLines: 100000,
-                                                    ),
-                                                    backgroundColor: Colors.blue,
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.max,
+                                                    children: [
+                                                      Chip(
+                                                        label: Text(
+                                                          buildMessage(m.message, context),
+                                                          softWrap: true,
+                                                          maxLines: 100000,
+                                                        ),
+                                                        backgroundColor: Colors.blue,
+                                                      ),
+                                                      if (m.message.startsWith(AcceptedRules))
+                                                        ElevatedButton(
+                                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                                                          onPressed: () {
+                                                            // simulate the game of life here
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) => JeuDeLaViePage(
+                                                                  config: Config.parse(m.message.split(":")[1]),
+                                                                  simulateRandom: true,
+                                                                  goToGeneration: 1000,
+                                                                ),
+                                                              ),
+                                                            ).then((value) {
+                                                              if (value != null) {
+                                                                context.read<PeerController>().send("$SimulationDone${m.id}");
+                                                                context.read<PeerController>().send((value as List<List<bool>>).map((r) => r.map((c) => c ? "X" : "O").join()).join("\n"));
+                                                              }
+                                                            });
+                                                          },
+                                                          child: const Text("Démarrer la simulation", style: TextStyle(color: Colors.white)),
+                                                        )
+                                                    ],
                                                   ),
                                                 )
                                               : Container(
@@ -80,31 +112,25 @@ class ChatWidget extends StatelessWidget {
                                                     mainAxisSize: MainAxisSize.max,
                                                     children: [
                                                       Chip(
-                                                        label: Text("${e.sender} > ${e.message}",
-                                                            softWrap: true,
-                                                            maxLines: 100000,
-                                                            style: const TextStyle(color: Colors.white)),
+                                                        label:
+                                                            Text("${m.sender} >\n${buildMessage(m.message, context)}", softWrap: true, maxLines: 100000, style: const TextStyle(color: Colors.white)),
                                                         backgroundColor: Colors.grey,
                                                       ),
-                                                      if (e.message.startsWith("RULES:"))
+                                                      if (m.message.startsWith(Rules))
                                                         Row(
                                                           mainAxisSize: MainAxisSize.min,
                                                           children: [
                                                             ElevatedButton(
-                                                              style: ElevatedButton.styleFrom(primary: Colors.green),
+                                                              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                                                               onPressed: () {
-                                                                context
-                                                                    .read<PeerController>()
-                                                                    .send("OUI TO RULES:${e.id}");
+                                                                context.read<PeerController>().send("$OuiToRules${m.id}");
                                                               },
                                                               child: const Text("OUI"),
                                                             ),
                                                             ElevatedButton(
-                                                              style: ElevatedButton.styleFrom(primary: Colors.red),
+                                                              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                                                               onPressed: () {
-                                                                context
-                                                                    .read<PeerController>()
-                                                                    .send("NON TO RULES:${e.id}");
+                                                                context.read<PeerController>().send("$NonToRules${m.id}");
                                                               },
                                                               child: const Text("NON"),
                                                             ),
@@ -159,5 +185,14 @@ class ChatWidget extends StatelessWidget {
               )
       ],
     );
+  }
+
+  String buildMessage(String message, BuildContext context) {
+    if (message.startsWith(OuiToRules) || message.startsWith(NonToRules)) {
+      return message.split(Rules)[0] + Rules + context.read<PeerController>().history[message.split(Rules)[1]]!.message.split(Rules)[1];
+    } else if (message.startsWith(SimulationDone) && context.read<PeerController>().history[message.split(SimulationDone)[1]] != null) {
+      return SimulationDone + context.read<PeerController>().history[message.split(SimulationDone)[1]]!.message.split(Rules)[1];
+    }
+    return message;
   }
 }

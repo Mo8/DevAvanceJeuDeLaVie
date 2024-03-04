@@ -20,32 +20,33 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-          child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Logged as : ${context.watch<LoginController>().user?.username ?? "No user"}"),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/jeuDeLaVie");
-              },
-              icon: const Icon(
-                Icons.gamepad,
-                size: 100,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Logged as : ${context.watch<LoginController>().user?.userLabel ?? "No user"}"),
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/jeuDeLaVie");
+                },
+                icon: const Icon(
+                  Icons.gamepad,
+                  size: 100,
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/message");
-              },
-              child: const Text("Message"),
-            ),
-          ],
+              const SizedBox(
+                height: 20,
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/message");
+                },
+                child: const Text("Message"),
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
