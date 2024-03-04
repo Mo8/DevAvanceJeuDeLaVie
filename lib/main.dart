@@ -1,13 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:jeu_de_la_vie/controllers/LoginController.dart';
+import 'package:jeu_de_la_vie/controllers/PeerController.dart';
 import 'package:jeu_de_la_vie/models/Config.dart';
 import 'package:jeu_de_la_vie/pages/HomePage.dart';
 import 'package:jeu_de_la_vie/pages/JeuDeLaViePage.dart';
 import 'package:jeu_de_la_vie/pages/LoginPage.dart';
+import 'package:jeu_de_la_vie/pages/MessagePage.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(create: (context) => LoginController(), child: const MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => LoginController()),
+    ChangeNotifierProvider(create: (context) => PeerController(Random().nextInt(10).toString(),context)),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,8 +37,12 @@ class MyApp extends StatelessWidget {
                   : const Config(survive: {2, 3}, born: {3}),
             ),
         "/login": (context) => const LoginPage(),
-        "/": (context) => const HomePage(),
+        "/message": (context) => const MessagePage(),
+        "/": (context) =>  HomePage(),
       },
     );
   }
 }
+
+
+
