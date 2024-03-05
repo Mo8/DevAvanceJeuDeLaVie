@@ -18,8 +18,8 @@ class LoginController extends ChangeNotifier {
       db = value.collection("users");
       if (await db?.count() == 0 ) {
         await db?.insertAll([
-          {"username": "admin", "password": sha256.convert(utf8.encode("admin")).toString(), "config": "23A3D"},
-          {"username": "user", "password": sha256.convert(utf8.encode("user")).toString(), "config": "23A3D"},
+          {"username": "admin", "password": sha256.convert(utf8.encode("admin")).toString(), "config": "23A13D"},
+          {"username": "user", "password": sha256.convert(utf8.encode("user")).toString(), "config": "23456A34D"},
         ]);
         print("Inserted");
       }
