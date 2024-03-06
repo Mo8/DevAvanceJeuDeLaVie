@@ -12,7 +12,7 @@ class LoginController extends ChangeNotifier {
   mongo.DbCollection? db;
 
   LoginController() {
-    mongo.Db.create("mongodb+srv://root:$passwordDB@cluster0.4kfm6pu.mongodb.net/jeuDeLaVie?retryWrites=true&w=majority")
+    mongo.Db.create("mongodb+srv://root:$passwordDB@$hostDB/$nameDB?retryWrites=true&w=majority")
         .then((value) async {
       await value.open();
       db = value.collection("users");
