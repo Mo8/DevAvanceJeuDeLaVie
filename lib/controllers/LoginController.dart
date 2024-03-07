@@ -3,16 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jeu_de_la_vie/models/Config.dart';
 import 'package:jeu_de_la_vie/models/User.dart';
-import 'package:jeu_de_la_vie/secret.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:crypto/crypto.dart';
 
 class LoginController extends ChangeNotifier {
   User? user;
   mongo.DbCollection? db;
-
+static const  mongoDBurl =  String.fromEnvironment("mongoDB");
   LoginController() {
-    mongo.Db.create("mongodb+srv://root:$passwordDB@$hostDB/$nameDB?retryWrites=true&w=majority")
+    mongo.Db.create(mongoDBurl)
         .then((value) async {
       await value.open();
       db = value.collection("users");
