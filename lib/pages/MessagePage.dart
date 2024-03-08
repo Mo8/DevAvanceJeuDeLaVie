@@ -8,9 +8,12 @@ class MessagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Message"),
+        title: const Text("Chat"),
       ),
-      body: ChatWidget(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ChatWidget(),
+      ),
     );
   }
 }
