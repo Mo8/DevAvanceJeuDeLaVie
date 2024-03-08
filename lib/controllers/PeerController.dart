@@ -27,13 +27,17 @@ class PeerController extends ChangeNotifier {
     );
 
     peer?.on('open').listen((data) {
-      print('peer open');
+      print('peer open ${connection != null ? connection!.open : "no connection"}');
       notifyListeners();
     });
 
     peer?.on<DataConnection>('connection').listen((data) {
       print('${data.peer} connection...');
       connection = data;
+      connection?.on('open').listen((data) {
+        print('${connection?.peer} connected !');
+        notifyListeners();
+      });
       listenData();
     });
   }
@@ -88,6 +92,7 @@ class PeerController extends ChangeNotifier {
     print('connecting to ${connection?.peer}...');
     connection?.on("open").listen((data) {
       print('${connection?.peer} connected !');
+      notifyListeners();
     });
     listenData();
   }

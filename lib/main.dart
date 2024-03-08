@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => LoginController()),
-    ChangeNotifierProvider(create: (context) => PeerController(Random().nextInt(10).toString(),context)),
+    ChangeNotifierProvider(create: (context) => PeerController(Random().nextInt(1000000).toString(),context)),
   ], child: const MyApp()));
 }
 
