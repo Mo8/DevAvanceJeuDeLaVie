@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
   zoom_widget: ^2.0.1
-  mongo_dart: any
   provider: ^6.1.1
   crypto: ^3.0.3
   peerdart: ^0.5.4
