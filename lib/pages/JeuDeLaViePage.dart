@@ -9,12 +9,17 @@ class JeuDeLaViePage extends StatelessWidget {
   final simulateRandom;
   final int? goToGeneration;
 
-  const JeuDeLaViePage({Key? key, required this.config, this.simulateRandom = false, this.goToGeneration, }) : super(key: key);
+  const JeuDeLaViePage({
+    Key? key,
+    required this.config,
+    this.simulateRandom = false,
+    this.goToGeneration,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => JeuDeLaVieController(config: config, size: 30,simulateRandom: simulateRandom , goToGeneration: goToGeneration),
+      create: (context) => JeuDeLaVieController(config: config, size: 30, simulateRandom: simulateRandom, goToGeneration: goToGeneration),
       builder: (context, child) {
         return Scaffold(
           appBar: AppBar(
@@ -24,13 +29,13 @@ class JeuDeLaViePage extends StatelessWidget {
               },
             ),
             actions: [
-                IconButton(
-                  onPressed: () {
-                    context.read<JeuDeLaVieController>().resumeOrPause();
-                  },
-                  icon: Icon(context.watch<JeuDeLaVieController>().resume ? Icons.pause : Icons.play_arrow),
-                ),
-              if(simulateRandom)
+              IconButton(
+                onPressed: () {
+                  context.read<JeuDeLaVieController>().resumeOrPause();
+                },
+                icon: Icon(context.watch<JeuDeLaVieController>().resume ? Icons.pause : Icons.play_arrow),
+              ),
+              if (simulateRandom)
                 IconButton(
                   onPressed: () {
                     Navigator.pop(context, context.read<JeuDeLaVieController>().currentTab);

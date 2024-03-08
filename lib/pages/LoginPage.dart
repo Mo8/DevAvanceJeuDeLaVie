@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,10 +22,12 @@ class _LoginPageState extends State<LoginPage> {
         title: const Text("Login Page"),
       ),
       body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("Login Page"),
-            SizedBox(width: 200,
+            SizedBox(
+              width: 200,
               child: Form(
                 key: formKey,
                 child: Column(
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "Username",
                       ),
                       validator: (value) {
-                        if(value == null || value.isEmpty) {
+                        if (value == null || value.isEmpty) {
                           return "Please enter your username";
                         }
                         return null;
@@ -49,19 +50,28 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "Password",
                       ),
                       validator: (value) {
-                        if(value == null || value.isEmpty) {
+                        if (value == null || value.isEmpty) {
                           return "Please enter your password";
                         }
                         return null;
                       },
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     ElevatedButton(
                       onPressed: () {
-                        if(formKey.currentState!.validate()) {
-                          context.read<LoginController>().login(usernameController.text, passwordController.text);
+                        if (formKey.currentState!.validate()) {
+                          context.read<LoginController>().login(usernameController.text, passwordController.text).then((value) {
+                            if (context.read<LoginController>().user != null) {
+                              Navigator.pop(context);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Invalid username or password")));
+                            }
+                          }).catchError((error) {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("An error occured")));
+                          });
 
-                          Navigator.pop(context);
                         }
                       },
                       child: const Text("Login"),

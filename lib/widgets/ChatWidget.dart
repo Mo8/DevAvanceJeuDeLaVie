@@ -18,7 +18,7 @@ class ChatWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Peer id : ${context.watch<PeerController>().id}"),
+            Text("ID : ${context.watch<PeerController>().id} ${context.watch<PeerController>().connection != null ? context.watch<PeerController>().connection?.open : ""}"),
             const SizedBox(
               width: 10,
             ),
@@ -26,18 +26,19 @@ class ChatWidget extends StatelessWidget {
               onPressed: () {
                 context.read<PeerController>().reloadPeer();
               },
-              child: const Text("Reload peer"),
+              child: const Text("Recharger"),
             ),
           ],
         ),
-        context.watch<PeerController>().connection != null
+
+        context.watch<PeerController>().connection != null && context.watch<PeerController>().connection!.open 
             ? Expanded(
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Connected to peer ${context.watch<PeerController>().connection!.peer}"),
+                        Text("Connecté à ${context.watch<PeerController>().connection!.peer}"),
                         const SizedBox(
                           width: 10,
                         ),
@@ -45,7 +46,7 @@ class ChatWidget extends StatelessWidget {
                           onPressed: () {
                             context.read<PeerController>().close();
                           },
-                          child: const Text("Close"),
+                          child: const Text("Fermer la connexion"),
                         ),
                       ],
                     ),
@@ -153,6 +154,10 @@ class ChatWidget extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10.0),
                             child: TextField(
+                              onSubmitted: (value) {
+                                context.read<PeerController>().send(value);
+                                textEditingController.clear();
+                              },
                               controller: textEditingController,
                             ),
                           ),
@@ -171,16 +176,22 @@ class ChatWidget extends StatelessWidget {
               )
             : Column(
                 children: [
+                  Text("Se connecter avec un ID : 0 à 999999"),
                   TextField(
+                    onSubmitted: (value) {
+                      context.read<PeerController>().connect();
+                    },
                     controller: context.read<PeerController>().textEditingController,
                   ),
-                  TextButton(
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
                     onPressed: () {
                       context.read<PeerController>().connect();
                     },
-                    child: const Text("Connect to peer"),
-                  ),
-                  const Text("Not connected to peer"),
+                    child: const Text("Se connecter"),
+                  )
                 ],
               )
       ],
